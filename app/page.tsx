@@ -936,27 +936,13 @@ export default function Home() {
       {/* CTA Section */}
       <section className="py-16 bg-gradient-to-r from-purple-900/30 to-cyan-900/30 border-y border-white/10">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Betting Strategy?</h2>
-          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-            Join thousands of bettors who are using our AI-powered tools to make more informed betting decisions.
-          </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/chatbot">
-              <Button className="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-700 hover:to-cyan-600 text-white px-8 py-6 text-lg h-auto">
-                Try MLB BettingBot
-              </Button>
-            </Link>
             <Button variant="outline" className="border-white/20 hover:bg-white/10 text-white px-8 py-6 text-lg h-auto">
               View Our Solutions
             </Button>
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-black border-t border-white/10 py-8">
-        {/* Footer content here */}
-      </footer>
 
       <Toaster />
 

@@ -33,6 +33,26 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
+// Define types for game and bet objects
+interface Game {
+  id: number
+  homeTeam: string
+  awayTeam: string
+  time: string
+  date: string
+  homeOdds: string
+  awayOdds: string
+  prediction: string
+}
+
+interface Bet {
+  id: number
+  description: string
+  odds: string
+  confidence: string
+  value: string
+}
+
 export default function ChatbotPage() {
   const { toast } = useToast()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -48,7 +68,8 @@ export default function ChatbotPage() {
   const [showSettings, setShowSettings] = useState(false)
   const [showInfo, setShowInfo] = useState(true)
   const [activeTab, setActiveTab] = useState("chat")
-  const chatContainerRef = useRef(null)
+  // Fix the ref type to properly handle DOM element
+  const chatContainerRef = useRef<HTMLDivElement | null>(null)
 
   // Mock upcoming games data
   const upcomingGames = [
@@ -109,7 +130,7 @@ export default function ChatbotPage() {
     },
   ]
 
-  // Scroll to bottom of chat when new messages are added
+  // Scroll to bottom of chat when new messages are added - fixed type issue
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
@@ -205,13 +226,15 @@ export default function ChatbotPage() {
     ])
   }
 
-  const handleGameSelect = (game) => {
+  // Fix the game parameter type
+  const handleGameSelect = (game: Game) => {
     const gameQuery = `Tell me more about the ${game.awayTeam} vs ${game.homeTeam} game.`
     setMessage(gameQuery)
     handleSubmit({ preventDefault: () => {} } as React.FormEvent)
   }
 
-  const handleBetSelect = (bet) => {
+  // Fix the bet parameter type
+  const handleBetSelect = (bet: Bet) => {
     const betQuery = `Tell me more about "${bet.description}" with odds ${bet.odds}.`
     setMessage(betQuery)
     handleSubmit({ preventDefault: () => {} } as React.FormEvent)
@@ -787,17 +810,6 @@ export default function ChatbotPage() {
           </div>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="py-6 border-t border-white/10 mt-8">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-gray-400 text-sm">© {new Date().getFullYear()} BetGenius AI. All rights reserved.</p>
-          <p className="text-xs text-gray-500 mt-2">
-            BetGenius AI is intended for informational purposes only. Please gamble responsibly and be aware of your
-            local gambling laws.
-          </p>
-        </div>
-      </footer>
 
       <Toaster />
     </div>
