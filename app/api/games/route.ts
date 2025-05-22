@@ -1,9 +1,10 @@
 //  Route handler for MLB game data with caching and AI analysis
 import { NextRequest, NextResponse } from 'next/server';
+import { analyzeGames } from '@/lib/services/ai-analysis';
 
 // In-memory cache for development - in production use Vercel KV or similar
-let cachedGames = null;
-let cachedTimestamp = null;
+let cachedGames: { games: any[]; topPicks: any[]; lastUpdated: string } | null = null;
+let cachedTimestamp: number | null = null;
 const CACHE_DURATION = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
 
 export async function GET(request: NextRequest) {
@@ -12,14 +13,11 @@ export async function GET(request: NextRequest) {
     if (cachedGames && cachedTimestamp && Date.now() - cachedTimestamp < CACHE_DURATION) {
       console.log('Serving cached MLB game data');
       return NextResponse.json(cachedGames);
-    }
-
-    // Fetch fresh data from sports API
+    }    // Fetch fresh data from sports API
     console.log('Fetching fresh MLB game data');
     const games = await fetchMLBGames();
-    
-    // Generate top picks using AI analysis
-    const topPicks = await analyzeGamesWithAI(games);
+      // Generate top picks using AI analysis
+    const topPicks = await analyzeGames(games);
     
     // Cache the results
     cachedGames = { games, topPicks, lastUpdated: new Date().toISOString() };
@@ -87,25 +85,6 @@ async function fetchMLBGames() {
           ]
         }
       ]
-    }
-  ];
-}
-
-async function analyzeGamesWithAI(games) {
-  // TODO: Implement actual AI analysis
-  // This could connect to OpenAI API, Flowise, or a custom model
-  
-  // Mock data for development
-  return [
-    {
-      gameId: 'mlb_123',
-      homeTeam: 'New York Yankees',
-      awayTeam: 'Boston Red Sox',
-      pick: 'New York Yankees',
-      confidence: 'High',
-      reasoning: 'Yankees have won 7 of their last 10 home games against Boston. Their starting pitcher has a 2.40 ERA in his last 5 starts.',
-      recommendedBet: 'Moneyline',
-      odds: -150
     }
   ];
 }

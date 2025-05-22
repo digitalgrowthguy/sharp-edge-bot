@@ -34,6 +34,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
+// Import our games component
+import { UpcomingGames } from "@/components/games/UpcomingGames"
+import { GameProvider } from "@/contexts/GameDataContext"
+
 // Define types for game and bet objects
 interface Game {
   id: number
@@ -241,10 +245,10 @@ export default function ChatbotPage() {
     setMessage(betQuery)
     handleSubmit({ preventDefault: () => {} } as React.FormEvent)
   }
-
   return (
     <>
       <SignedIn>
+        <GameProvider>
         <div className="min-h-screen bg-black text-white">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
@@ -663,10 +667,11 @@ export default function ChatbotPage() {
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </TabsContent>
-
-                <TabsContent value="insights">
+                </TabsContent>                <TabsContent value="insights">
                   <div className="space-y-6">
+                    {/* Use our new UpcomingGames component */}
+                    <UpcomingGames />
+                    
                     <Card className="bg-zinc-900/50 border-white/10">
                       <CardHeader>
                         <CardTitle className="flex items-center gap-2">
@@ -841,10 +846,9 @@ export default function ChatbotPage() {
             </div>
           </div>
         </div>
-      </main>
-
-          <Toaster />
+      </main>          <Toaster />
         </div>
+        </GameProvider>
       </SignedIn>
       <SignedOut>
         <RedirectToSignIn />
