@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react"
 import Link from "next/link"
+import { SignedOut, SignedIn, useClerk } from "@clerk/nextjs"
 import Image from "next/image"
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import './animations.css'
@@ -34,9 +35,13 @@ import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
+// use relative imports for local components
+import ParticleNetwork from '../components/ParticleNetwork'
+import CodeSnippet from '../components/codesnippet'
 
 export default function Home() {
   const { toast } = useToast()
+  const { signOut } = useClerk()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [email, setEmail] = useState("")
   const [message, setMessage] = useState("")
@@ -58,7 +63,7 @@ export default function Home() {
   useEffect(() => {
     const interval = setInterval(() => {
       setAnimatedText((prev) => (prev + 1) % sportsBettingCapabilities.length)
-    }, 3000)
+    }, 3000) // cycle every ~3s for faster rotation
     return () => clearInterval(interval)
   }, [])
 
@@ -209,14 +214,17 @@ export default function Home() {
     },
   ]
 
+  // Rotating AI agent roles for hero section
+  // Rotating AI agent roles for hero section
   const sportsBettingCapabilities = [
-    "MLB Predictions",
-    "Odds Analysis",
-    "Player Performance",
-    "Prop Betting",
-    "Live Betting Insights",
-    "Historical Trends",
-    "Bankroll Management",
+    "Trends Analysis Agents",
+    "Travel Impact Agents",
+    "Advanced Statistical Agents",
+    "Predictive Modeling Agents",
+    "Real-time Odds Agents",
+    "Injury Insight Agents",
+    "Strategy Synthesizer Agents",
+    "Bankroll Management Agents",
   ]
 
   const featuredProjects = [
@@ -324,9 +332,23 @@ export default function Home() {
               <a href="#contact" className="text-sm hover:text-purple-400 transition-colors">
                 Contact
               </a>
-              <Button className="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-700 hover:to-cyan-600 text-white">
-                Get Started
-              </Button>
+              <SignedOut>
+                <Link href="/sign-in">
+                  <Button variant="outline" className="border-white/20 hover:bg-white/10 text-white">
+                    Sign In
+                  </Button>
+                </Link>
+                <Link href="/sign-up">
+                  <Button className="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-700 hover:to-cyan-600 text-white">
+                    Get Started
+                  </Button>
+                </Link>
+              </SignedOut>
+              <SignedIn>
+                <Button variant="outline" className="border-white/20 hover:bg-white/10 text-white" onClick={() => signOut()}>
+                  Sign Out
+                </Button>
+              </SignedIn>
             </nav>
 
             {/* Mobile Menu Button */}
@@ -383,9 +405,23 @@ export default function Home() {
               >
                 Contact
               </a>
-              <Button className="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-700 hover:to-cyan-600 text-white w-full mt-4">
-                Get Started
-              </Button>
+              <SignedOut>
+                <Link href="/sign-in" className="w-full">
+                  <Button variant="outline" className="w-full">
+                    Log In
+                  </Button>
+                </Link>
+                <Link href="/sign-up" className="w-full">
+                  <Button className="w-full bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-700 hover:to-cyan-600 text-white mt-4">
+                    Sign Up
+                  </Button>
+                </Link>
+              </SignedOut>
+              <SignedIn>
+                <Button variant="outline" className="w-full" onClick={() => signOut()}>
+                  Sign Out
+                </Button>
+              </SignedIn>
             </nav>
           </motion.div>
         )}
@@ -405,23 +441,8 @@ export default function Home() {
           {/* Animated grid pattern */}
           <div className="absolute inset-0 bg-[url('/placeholder.svg?height=20&width=20&text=.')] bg-repeat opacity-5"></div>
 
-          {/* Particle effect */}
-          <div className="absolute inset-0 overflow-hidden">
-            {Array.from({ length: 20 }).map((_, i) => (
-              <div
-                key={i}
-                className="absolute rounded-full bg-purple-500/30"
-                style={{
-                  width: `${Math.random() * 6 + 2}px`,
-                  height: `${Math.random() * 6 + 2}px`,
-                  top: `${Math.random() * 100}%`,
-                  left: `${Math.random() * 100}%`,
-                  animation: `float ${Math.random() * 10 + 10}s linear infinite`,
-                  animationDelay: `${Math.random() * 10}s`,
-                }}
-              ></div>
-            ))}
-          </div>
+          {/* Particle Network Background */}
+          <ParticleNetwork />
         </div>
 
         <motion.div style={{ opacity, scale }} className="container mx-auto px-4 z-10 text-center">
@@ -436,7 +457,7 @@ export default function Home() {
               <span className="text-sm">AI-Powered Sports Betting Intelligence</span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 text-center">
               <span className="block">Smarter Betting Decisions</span>
               <span className="block mt-2 bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-cyan-400">
                 Powered by AI
@@ -453,21 +474,21 @@ export default function Home() {
                   transition={{ duration: 0.5 }}
                   className="text-2xl text-gray-300"
                 >
-                  Specialists in{" "}
-                  <span className="text-purple-400 font-semibold">{sportsBettingCapabilities[animatedText]}</span>
+                  <span className="text-purple-400 font-semibold">
+                    {sportsBettingCapabilities[animatedText]}
+                  </span>
                 </motion.p>
               </AnimatePresence>
             </div>
 
             <p className="mt-6 text-xl text-gray-300 max-w-2xl mx-auto">
-              Our AI-powered platform analyzes vast amounts of sports data to provide you with intelligent betting
-              insights and recommendations.
+              Our AI-powered platform analyzes vast amounts of sports data to provide you with intelligent betting insights and recommendations.
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/chatbot">
                 <Button className="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-700 hover:to-cyan-600 text-white px-8 py-6 text-lg h-auto group">
-                  Try MLB BettingBot
+                  Launch MLB BettingBot
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
@@ -477,6 +498,14 @@ export default function Home() {
               >
                 Learn More
               </Button>
+            </div>
+            {/* Hero CTAs moved to header */}
+
+            {/* Trust badge */}
+            <div className="mt-4 text-sm text-gray-400 flex justify-center space-x-2">
+              <span>50K+ conversations</span>
+              <span className="text-white/50">•</span>
+              <span>4.1★ on GPT Store</span>
             </div>
 
             <div className="mt-16 flex justify-center">

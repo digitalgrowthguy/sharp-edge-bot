@@ -28,6 +28,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/hooks/use-toast"
+import { SignedIn, SignedOut, RedirectToSignIn, useClerk } from "@clerk/nextjs"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -55,6 +56,7 @@ interface Bet {
 
 export default function ChatbotPage() {
   const { toast } = useToast()
+  const { signOut } = useClerk()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [message, setMessage] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -241,7 +243,9 @@ export default function ChatbotPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <>
+      <SignedIn>
+        <div className="min-h-screen bg-black text-white">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
         <div className="container mx-auto px-4 py-4">
@@ -273,9 +277,23 @@ export default function ChatbotPage() {
               <Link href="/#contact" className="text-sm hover:text-purple-400 transition-colors">
                 Contact
               </Link>
-              <Button className="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-700 hover:to-cyan-600 text-white">
-                Get Started
-              </Button>
+              <SignedOut>
+                <Link href="/sign-in">
+                  <Button variant="outline" className="border-white/20 hover:bg-white/10 text-white">
+                    Log In
+                  </Button>
+                </Link>
+                <Link href="/sign-up">
+                  <Button className="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-700 hover:to-cyan-600 text-white">
+                    Sign Up
+                  </Button>
+                </Link>
+              </SignedOut>
+              <SignedIn>
+                <Button variant="outline" className="border-white/20 hover:bg-white/10 text-white" onClick={() => signOut()}>
+                  Sign Out
+                </Button>
+              </SignedIn>
             </nav>
 
             {/* Mobile Menu Button */}
@@ -333,9 +351,23 @@ export default function ChatbotPage() {
               >
                 Contact
               </Link>
-              <Button className="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-700 hover:to-cyan-600 text-white w-full mt-4">
-                Get Started
-              </Button>
+              <SignedOut>
+                <Link href="/sign-in" className="w-full">
+                  <Button variant="outline" className="w-full">
+                    Log In
+                  </Button>
+                </Link>
+                <Link href="/sign-up" className="w-full">
+                  <Button className="w-full bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-700 hover:to-cyan-600 text-white mt-4">
+                    Sign Up
+                  </Button>
+                </Link>
+              </SignedOut>
+              <SignedIn>
+                <Button variant="outline" className="w-full" onClick={() => signOut()}>
+                  Sign Out
+                </Button>
+              </SignedIn>
             </nav>
           </motion.div>
         )}
@@ -811,7 +843,12 @@ export default function ChatbotPage() {
         </div>
       </main>
 
-      <Toaster />
-    </div>
+          <Toaster />
+        </div>
+      </SignedIn>
+      <SignedOut>
+        <RedirectToSignIn />
+      </SignedOut>
+    </>
   )
 }

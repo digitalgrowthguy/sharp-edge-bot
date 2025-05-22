@@ -91,8 +91,8 @@ export function Footer() {
             <ul className="space-y-2">
               <li className="flex items-start">
                 <Mail className="h-5 w-5 text-gray-400 mr-2 shrink-0 mt-0.5" />
-                <a href="mailto:info@sharpedgebot.ai" className="text-gray-400 hover:text-purple-400 transition-colors text-sm">
-                  info@sharpedgebot.ai
+                <a href="mailto:info@sharpedgebot.com" className="text-gray-400 hover:text-purple-400 transition-colors text-sm">
+                  info@sharpedgebot.com
                 </a>
               </li>
               <li>

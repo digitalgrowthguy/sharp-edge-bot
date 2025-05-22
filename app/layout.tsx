@@ -1,32 +1,25 @@
-import React from "react"
-import "@/app/globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import { Footer } from "@/components/footer"
+// app/layout.tsx
+// Root layout as server component to load global CSS
+import React from "react";
+import "./globals.css"
+import { ClerkProvider } from "@clerk/nextjs";
+import { Inter } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Footer } from "@/components/footer";
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "SharpEdge Bot | Sports Betting Intelligence",
-  description: "AI-powered sports betting insights, predictions, and analysis for smarter betting decisions.",
-  generator: 'v0.dev'
-}
-
-// Use a more specific type for children to avoid conflicts
-export default function RootLayout({
-  children,
-}: {
-  children: any // Using "any" type to bypass the type conflict
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-          <div>{children}</div>
+          <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!}>
+            {children}
+          </ClerkProvider>
           <Footer />
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }
